@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:FlowClaude.App.Controls"
+             x:Class="FlowClaude.App.Controls.FileChangeItem"
+             x:Name="Root"
+             x:DataType="local:FileChangeItem"
+             Height="32">
+  
+  <Border Background="Transparent"
+          PointerPressed="OnPointerPressed">
+    <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center" Margin="8,0">
+      
+      <!-- Status Icon -->
+      <PathIcon Grid.Column="0"
+                Data="{Binding StatusIcon}"
+                Width="14" Height="14"
+                Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"
+                Margin="0,0,8,0"/>
+      
+      <!-- File Path -->
+      <TextBlock Grid.Column="1"
+                 Text="{Binding FilePath}"
+                 FontSize="12"
+                 TextTrimming="CharacterEllipsis"
+                 VerticalAlignment="Center"/>
+      
+      <!-- Stats -->
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HasChanges}">
+        <TextBlock Text="+{Binding Additions}" Foreground="{DynamicResource SuccessColor}" FontSize="11"/>
+        <TextBlock Text="-{Binding Deletions}" Foreground="{DynamicResource ErrorColor}" FontSize="11"/>
+      </StackPanel>
+      
+    </Grid>
+  </Border>
+  
+</UserControl>

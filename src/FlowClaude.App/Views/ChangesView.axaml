@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:controls="using:FlowClaude.App.Controls"
+             x:Class="FlowClaude.App.Views.ChangesView"
+             x:DataType="vm:ChangesViewModel">
+  
+  <Grid ColumnDefinitions="300,1,*">
+    
+    <!-- File Tree -->
+    <Border Grid.Column="0"
+            Background="{DynamicResource SidebarBackground}"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="0,0,1,0">
+      
+      <Grid RowDefinitions="Auto,*">
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="12" Spacing="8">
+          <TextBlock Text="Changes" FontWeight="SemiBold" FontSize="14"/>
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Foreground="{DynamicResource SuccessColor}">
+              <Run Text="+"/> <Run Text="{Binding Additions}"/>
+            </TextBlock>
+            <TextBlock Foreground="{DynamicResource ErrorColor}">
+              <Run Text="-"/> <Run Text="{Binding Deletions}"/>
+            </TextBlock>
+          </StackPanel>
+        </StackPanel>
+        
+        <!-- File List -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+          <ItemsControl ItemsSource="{Binding FileChanges}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <controls:FileChangeItem FilePath="{Binding FilePath}"
+                                         Status="{Binding Status}"
+                                         StatusText="{Binding StatusText}"
+                                         StatusIcon="{Binding StatusIcon}"
+                                         Additions="{Binding Additions}"
+                                         Deletions="{Binding Deletions}"
+                                         IsSelected="{Binding IsSelected}"
+                                         SelectCommand="{Binding SelectCommand}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+        
+      </Grid>
+      
+    </Border>
+    
+    <Rectangle Grid.Column="1" Fill="{DynamicResource BorderColor}"/>
+    
+    <!-- Diff View -->
+    <Grid Grid.Column="2" RowDefinitions="Auto,*">
+      
+      <!-- Toolbar -->
+      <Border Grid.Row="0"
+              Background="{DynamicResource HeaderBackground}"
+              BorderBrush="{DynamicResource BorderColor}"
+              BorderThickness="0,0,0,1">
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="12">
+          <Button Content="Stage All" Command="{Binding StageAllCommand}" Classes="SecondaryButtonSmall"/>
+          <Button Content="Discard" Command="{Binding DiscardAllCommand}" Classes="SecondaryButtonSmall"/>
+          <Rectangle Width="1" Fill="{DynamicResource BorderColor}" Margin="8,0"/>
+          <Button Content="Commit" Command="{Binding CommitCommand}" Classes="PrimaryButtonSmall"/>
+        </StackPanel>
+      </Border>
+      
+      <!-- Diff Content -->
+      <ScrollViewer Grid.Row="1"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto">
+        <TextBox Text="{Binding DiffContent}"
+                 IsReadOnly="True"
+                 FontFamily="Cascadia Code, Fira Code, Consolas, monospace"
+                 FontSize="12"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 Padding="16"
+                 TextWrapping="NoWrap"/>
+      </ScrollViewer>
+      
+    </Grid>
+    
+  </Grid>
+
+</UserControl>

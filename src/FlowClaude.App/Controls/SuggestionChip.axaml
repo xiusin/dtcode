@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FlowClaude.App.Controls.SuggestionChip"
+             x:DataType="x:String">
+  
+  <Border Classes="Chip"
+          PointerPressed="OnPointerPressed">
+    <TextBlock x:Name="TextBlock"
+               Text="{Binding Content, RelativeSource={RelativeSource AncestorType=UserControl}}"
+               FontSize="13"
+               VerticalAlignment="Center"/>
+  </Border>
+  
+</UserControl>

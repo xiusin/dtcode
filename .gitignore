@@ -1,0 +1,50 @@
+# Build results
+[BDd]
+[Bb]in/
+[Oo]bj/
+[Rr]elease/
+x64/
+Debug/
+[Bb]uild/
+.NET 8.0
+
+# IDE
+.idea/
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# NuGet
+packages/
+*.nupkg
+nuget.config
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE Specific
+*.dotsettings
+*.resharper
+*.cache
+
+# Temporary Files
+*.tmp
+*.log
+*.tmp
+Temp/

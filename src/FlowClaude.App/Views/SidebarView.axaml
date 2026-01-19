@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:c="using:FlowClaude.App.Controls"
+             x:Class="FlowClaude.App.Views.SidebarView"
+             x:DataType="vm:MainWindowViewModel">
+  
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+    
+    <!-- Logo & Project Selector -->
+    <StackPanel Grid.Row="0" Margin="12,16,12,8">
+      
+      <!-- Project Dropdown -->
+      <ComboBox ItemsSource="{Binding Projects}"
+                SelectedItem="{Binding SelectedProject}"
+                PlaceholderText="Select Project"
+                MinHeight="40"
+                Margin="0,0,0,8">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <PathIcon Data="{StaticResource ProjectIcon}" 
+                        Width="16" Height="16"
+                        Foreground="{DynamicResource PrimaryColor}"/>
+              <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+            </StackPanel>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      
+    </StackPanel>
+    
+    <!-- New Workspace Button -->
+    <Button Grid.Row="1" 
+            Command="{Binding CreateWorkspaceCommand}"
+            Content="+ New Workspace"
+            Classes="PrimaryButton"
+            Margin="12,8"
+            Height="40"/>
+    
+    <!-- Workspace List -->
+    <ScrollViewer Grid.Row="2" 
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Padding="8,8">
+      <StackPanel Spacing="6">
+        
+        <!-- Pinned Workspaces -->
+        <ItemsControl ItemsSource="{Binding PinnedWorkspaces}"
+                      IsVisible="{Binding PinnedWorkspaces.Count, Converter={StaticResource NumberToBoolConverter}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <c:WorkspaceItem IsPinned="True"
+                               IsSelected="{Binding}"
+                               Workspace="{Binding}"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <!-- Recent Workspaces -->
+        <ItemsControl ItemsSource="{Binding RecentWorkspaces}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <c:WorkspaceItem 
+                  IsSelected="{Binding}"
+                  Workspace="{Binding}"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <!-- Empty State -->
+        <StackPanel IsVisible="{Binding RecentWorkspaces.Count, Converter={StaticResource NumberToBoolConverter}, ConverterParameter=Invert}}"
+                    Margin="16,48,16,16" HorizontalAlignment="Center">
+          <PathIcon Data="{StaticResource EmptyIcon}" 
+                    Width="48" Height="48"
+                    Foreground="{DynamicResource MutedForeground}"
+                    HorizontalAlignment="Center"/>
+          <TextBlock Text="No workspaces yet" 
+                     Foreground="{DynamicResource MutedForeground}"
+                     HorizontalAlignment="Center"
+                     Margin="0,12,0,4"
+                     FontSize="13"/>
+          <TextBlock Text="Create your first workspace" 
+                     FontSize="11"
+                     Foreground="{DynamicResource MutedForeground}"
+                     HorizontalAlignment="Center"
+                     Opacity="0.7"/>
+        </StackPanel>
+        
+      </StackPanel>
+    </ScrollViewer>
+    
+    <!-- Footer -->
+    <Border Grid.Row="3" 
+            BorderBrush="#1AFFFFFF"
+            BorderThickness="0,1,0,0"
+            Padding="12,16">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Button Command="{Binding ToggleThemeCommand}"
+                Classes="IconButtonSmall"
+                ToolTip.Tip="Toggle Theme">
+          <PathIcon Data="{Binding IsDarkTheme, Converter={StaticResource BoolToThemeIconConverter}}"/>
+        </Button>
+        <Button Command="{Binding OpenSettingsCommand}"
+                Classes="IconButtonSmall"
+                ToolTip.Tip="Settings">
+          <PathIcon Data="{StaticResource SettingsIcon}"/>
+        </Button>
+        <Rectangle Width="1" Fill="#1AFFFFFF" Margin="8,0"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8,0,0,0">
+          <TextBlock Text="FlowClaude" FontSize="11" FontWeight="SemiBold" Opacity="0.9"/>
+          <TextBlock Text="v1.0.0" FontSize="10" Foreground="{DynamicResource MutedForeground}" Opacity="0.7"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+    
+  </Grid>
+
+</UserControl>

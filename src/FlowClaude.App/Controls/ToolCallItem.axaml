@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             x:Class="FlowClaude.App.Controls.ToolCallItem"
+             x:DataType="vm:ToolCallViewModel">
+  
+  <UserControl.Styles>
+    <Style Selector="Border.ToolCall">
+      <Setter Property="Padding" Value="8,6"/>
+      <Setter Property="Background" Value="{DynamicResource DarkSurfaceHover}"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Margin" Value="0,4"/>
+    </Style>
+  </UserControl.Styles>
+  
+  <Border Classes="ToolCall">
+    <Grid ColumnDefinitions="Auto,*">
+      
+      <!-- Spinner/Icon -->
+      <ProgressBar Grid.Column="0"
+                   IsIndeterminate="True"
+                   Width="16"
+                   Height="16"
+                   IsVisible="{Binding IsRunning}"
+                   Foreground="{DynamicResource PrimaryColor}"/>
+      
+      <!-- Tool Name & Status -->
+      <StackPanel Grid.Column="1" Margin="8,0">
+        <TextBlock Text="{Binding ToolName}"
+                   FontSize="12"
+                   FontWeight="Medium"/>
+        <TextBlock Text="{Binding Input}"
+                   FontSize="11"
+                   Foreground="{DynamicResource MutedForeground}"
+                   TextTrimming="CharacterEllipsis"/>
+        
+        <!-- Output (shown after completion) -->
+        <TextBlock IsVisible="{Binding Output, Converter={StaticResource StringToBoolConverter}}"
+                   Text="{Binding Output}"
+                   FontSize="11"
+                   Foreground="{DynamicResource SuccessColor}"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,0"/>
+        
+        <!-- Error -->
+        <TextBlock IsVisible="{Binding IsError}"
+                   Text="{Binding Output}"
+                   FontSize="11"
+                   Foreground="{DynamicResource ErrorColor}"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,0"/>
+        
+      </StackPanel>
+      
+    </Grid>
+  </Border>
+  
+</UserControl>

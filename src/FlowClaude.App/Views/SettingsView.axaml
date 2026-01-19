@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FlowClaude.App.Views.SettingsView"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             x:DataType="vm:MainWindowViewModel">
+  
+  <Border Background="{DynamicResource PopupBackground}"
+          BorderBrush="{DynamicResource BorderColor}"
+          BorderThickness="1"
+          CornerRadius="8"
+          Width="400"
+          Height="300"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          BoxShadow="{DynamicResource PopupShadow}">
+    
+    <Grid RowDefinitions="Auto,*,Auto">
+      
+      <!-- Header -->
+      <StackPanel Grid.Row="0" 
+                  Orientation="Horizontal" 
+                  Spacing="8"
+                  Margin="16"
+                  VerticalAlignment="Center">
+        <PathIcon Data="{StaticResource SettingsIcon}" 
+                  Width="20" Height="20"
+                  Foreground="{DynamicResource PrimaryColor}"/>
+        <TextBlock Text="Settings" FontSize="18" FontWeight="SemiBold"/>
+        <Button Command="{Binding CloseSettingsCommand}"
+                Classes="IconButtonSmall"
+                HorizontalAlignment="Right"
+                Margin="140,0,0,0">
+          <PathIcon Data="{StaticResource CloseIcon}" Width="16" Height="16"/>
+        </Button>
+      </StackPanel>
+      
+      <!-- Content -->
+      <StackPanel Grid.Row="1" Spacing="16" Margin="16,0">
+        
+        <!-- Theme Toggle -->
+        <StackPanel>
+          <TextBlock Text="Theme" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <RadioButton IsChecked="{Binding IsDarkTheme}"
+                       GroupName="Theme" 
+                       Content="Dark Mode"
+                       Margin="0,4"/>
+          <RadioButton IsChecked="{Binding IsDarkTheme, Converter={StaticResource BoolToBoolConverter}, ConverterParameter=Invert}"
+                       GroupName="Theme" 
+                       Content="Light Mode"
+                       Margin="0,4"/>
+        </StackPanel>
+        
+        <!-- Terminal Settings -->
+        <StackPanel>
+          <TextBlock Text="Terminal" FontWeight="SemiBold" Margin="0,8,0,4"/>
+          <CheckBox Content="Shell integration" IsChecked="True"/>
+          <CheckBox Content="Copy on selection" IsChecked="True"/>
+          <CheckBox Content="Paste on middle click" IsChecked="True"/>
+        </StackPanel>
+        
+        <!-- Agent Settings -->
+        <StackPanel>
+          <TextBlock Text="AI Agent" FontWeight="SemiBold" Margin="0,8,0,4"/>
+          <ComboBox SelectedIndex="0" Width="200" HorizontalAlignment="Left">
+            <ComboBoxItem>Claude Code (Anthropic)</ComboBoxItem>
+            <ComboBoxItem>OpenAI GPT-4</ComboBoxItem>
+            <ComboBoxItem>Custom API</ComboBoxItem>
+          </ComboBox>
+        </StackPanel>
+        
+      </StackPanel>
+      
+      <!-- Footer -->
+      <StackPanel Grid.Row="2" 
+                  Orientation="Horizontal" 
+                  HorizontalAlignment="Right"
+                  Spacing="8"
+                  Margin="16">
+        <Button Content="Cancel" 
+                Command="{Binding CloseSettingsCommand}"
+                Classes="SecondaryButton"/>
+        <Button Content="Save" 
+                Classes="PrimaryButton"/>
+      </StackPanel>
+      
+    </Grid>
+    
+  </Border>
+
+</UserControl>

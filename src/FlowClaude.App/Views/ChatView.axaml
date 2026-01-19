@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:controls="using:FlowClaude.App.Controls"
+             x:Class="FlowClaude.App.Views.ChatView"
+             x:DataType="vm:ChatViewModel">
+  
+  <Grid RowDefinitions="*,Auto,Auto">
+    
+    <!-- Chat Messages Area -->
+    <ScrollViewer Grid.Row="0"
+                  Name="MessagesScroll"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Padding="16,16,16,8">
+      
+      <StackPanel Spacing="16">
+        
+        <!-- Welcome / Empty State -->
+        <StackPanel IsVisible="{Binding Messages.Count, Converter={StaticResource NumberToBoolConverter}, ConverterParameter=Invert}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0,60">
+          <Border Background="#1A1A1E" 
+                  CornerRadius="16" 
+                  Padding="32,40"
+                  Effect="{DynamicResource GlowEffect}">
+            <StackPanel>
+              <PathIcon Data="{StaticResource BotIcon}" 
+                        Width="56" Height="56"
+                        Foreground="{DynamicResource PrimaryColor}"
+                        HorizontalAlignment="Center"/>
+              <TextBlock Text="How can I help you today?" 
+                         FontSize="20" 
+                         FontWeight="SemiBold"
+                         HorizontalAlignment="Center"
+                         Margin="0,20,0,8"/>
+              <TextBlock Text="Ask me to help with coding, debugging, or any development task" 
+                         Foreground="{DynamicResource MutedForeground}"
+                         HorizontalAlignment="Center"
+                         TextAlignment="Center"
+                         FontSize="14"/>
+              
+              <!-- Suggested Prompts -->
+              <StackPanel Margin="0,28" Spacing="10" HorizontalAlignment="Center">
+                <controls:SuggestionChip Content="Review my code for bugs"
+                                         Command="{Binding SendMessageCommand}"
+                                         CommandParameter="Review my code for bugs"/>
+                <controls:SuggestionChip Content="Help me implement a new feature"
+                                         Command="{Binding SendMessageCommand}"
+                                         CommandParameter="Help me implement a new feature"/>
+                <controls:SuggestionChip Content="Explain how this code works"
+                                         Command="{Binding SendMessageCommand}"
+                                         CommandParameter="Explain how this code works"/>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        
+        <!-- Messages -->
+        <ItemsControl ItemsSource="{Binding Messages}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <controls:ChatMessageView 
+                  Role="{Binding Role}"
+                  Content="{Binding Content}"
+                  IsStreaming="{Binding IsStreaming}"
+                  IsError="{Binding IsError}"
+                  Timestamp="{Binding Timestamp}"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <!-- Active Tool Calls -->
+        <ItemsControl ItemsSource="{Binding ActiveToolCalls}"
+                      IsVisible="{Binding ActiveToolCalls.Count, Converter={StaticResource NumberToBoolConverter}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <controls:ToolCallItem ToolName="{Binding ToolName}"
+                                     Input="{Binding Input}"
+                                     Output="{Binding Output}"
+                                     Status="{Binding Status}"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+      </StackPanel>
+      
+    </ScrollViewer>
+    
+    <!-- Mode Banner -->
+    <Border Grid.Row="1"
+            Background="{Binding HasPendingPlan, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=Plan}"
+            IsVisible="{Binding CurrentMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Plan}"
+            Padding="16,10"
+            CornerRadius="8"
+            Margin="16,8">
+      <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+        <PathIcon Data="{StaticResource PlanIcon}" Width="16" Height="16"/>
+        <TextBlock Text="Plan Mode - Review and approve before execution" FontSize="13"/>
+        <Button Content="Approve" 
+                Command="{Binding ApprovePlanCommand}"
+                Classes="PrimaryButton"
+                Padding="12,6"
+                FontSize="12"
+                IsVisible="{Binding HasPendingPlan}"/>
+      </StackPanel>
+    </Border>
+    
+    <!-- Input Area -->
+    <Border Grid.Row="2"
+            Background="#1A1A1E"
+            BorderBrush="#1AFFFFFF"
+            BorderThickness="0,1,0,0"
+            CornerRadius="12,12,0,0"
+            Padding="16,16,16,20">
+      
+      <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Bottom">
+        
+        <!-- Text Input -->
+        <TextBox Grid.Column="0"
+                 Text="{Binding CurrentMessage}"
+                 AcceptsReturn="True"
+                 MinHeight="44"
+                 MaxHeight="150"
+                 Watermark="Ask FlowClaude to help with your code..."
+                 Classes="ChatInput"
+                 KeyDown="OnInputKeyDown"/>
+        
+        <!-- Send Button -->
+        <Button Grid.Column="1"
+                Command="{Binding SendMessageCommand}"
+                IsEnabled="{Binding IsProcessing, Converter={StaticResource BoolToBoolConverter}, ConverterParameter=Invert}}"
+                Classes="SendButton"
+                Margin="10,0,0,0">
+          <PathIcon Data="{StaticResource SendIcon}"/>
+        </Button>
+        
+      </Grid>
+      
+    </Border>
+    
+  </Grid>
+
+</UserControl>

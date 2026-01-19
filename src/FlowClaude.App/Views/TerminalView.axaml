@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:controls="using:FlowClaude.App.Controls"
+             x:Class="FlowClaude.App.Views.TerminalView"
+             x:DataType="vm:TerminalViewModel">
+  
+  <Grid RowDefinitions="Auto,*">
+    
+    <!-- Terminal Tabs -->
+    <Border Grid.Row="0"
+            Background="{DynamicResource TerminalTabBackground}"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="0,0,0,1">
+      
+      <ScrollViewer VerticalScrollBarVisibility="Disabled"
+                    HorizontalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Horizontal" Spacing="0" Height="36">
+          
+          <!-- Tabs -->
+          <ItemsControl ItemsSource="{Binding Tabs}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <controls:TerminalTab Title="{Binding Title}"
+                                      CurrentDirectory="{Binding CurrentDirectory}"
+                                      IsActive="{Binding IsActive}"
+                                      IsConnected="{Binding IsConnected}"
+                                      CloseCommand="{Binding CloseCommand}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          
+          <!-- New Tab Button -->
+          <Button Command="{Binding NewTabCommand}"
+                  Classes="IconButtonSmall"
+                  Margin="4,4">
+            <PathIcon Data="{StaticResource PlusIcon}" Width="14" Height="14"/>
+          </Button>
+          
+        </StackPanel>
+      </ScrollViewer>
+      
+    </Border>
+    
+    <!-- Terminal Content -->
+    <Border Grid.Row="1"
+            Background="{DynamicResource TerminalBackground}">
+      
+      <Grid RowDefinitions="*,Auto">
+        
+        <!-- Terminal Output (Placeholder for xterm-style rendering) -->
+        <ScrollViewer Grid.Row="0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+          <TextBox Text="{Binding ActiveTab.Output, Mode=OneWay}"
+                   Background="Transparent"
+                   BorderThickness="0"
+                   FontFamily="Cascadia Code, Fira Code, Consolas, monospace"
+                   FontSize="13"
+                   IsReadOnly="True"
+                   TextWrapping="NoWrap"
+                   CaretBrush="Transparent"
+                   SelectionBrush="{DynamicResource PrimaryColor}"
+                   Padding="8"/>
+        </ScrollViewer>
+        
+        <!-- Command Input -->
+        <TextBox Grid.Row="1"
+                 VerticalAlignment="Bottom"
+                 Text="{Binding ActiveTab.CommandBuffer, Mode=TwoWay}"
+                 Background="{DynamicResource TerminalInputBackground}"
+                 BorderBrush="{DynamicResource BorderColor}"
+                 BorderThickness="0,1,0,0"
+                 FontFamily="Cascadia Code, Fira Code, Consolas, monospace"
+                 FontSize="13"
+                 Padding="16,12"
+                 KeyDown="OnCommandKeyDown">
+        <TextBox.InnerLeftContent>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0">
+            <TextBlock Text="❯" Foreground="{DynamicResource PrimaryColor}" FontWeight="Bold"/>
+            <TextBlock Text="{Binding ActiveTab.CurrentDirectory, StringFormat=' {0}'}" 
+                       Foreground="{DynamicResource MutedForeground}"
+                       Margin="4,0"/>
+          </StackPanel>
+        </TextBox.InnerLeftContent>
+      </TextBox>
+      
+      </Grid>
+      
+    </Border>
+    
+  </Grid>
+
+</UserControl>

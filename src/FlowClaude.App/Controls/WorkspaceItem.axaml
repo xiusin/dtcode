@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:core="using:FlowClaude.Core.Entities"
+             x:Class="FlowClaude.App.Controls.WorkspaceItem"
+             x:Name="Root">
+  
+  <UserControl.Styles>
+    <Style Selector="Border.WorkspaceItem">
+      <Setter Property="Padding" Value="8,6"/>
+      <Setter Property="Cursor" Value="Pointer"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    
+    <Style Selector="Border.WorkspaceItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource DarkSurfaceHover}"/>
+    </Style>
+    
+    <Style Selector="Border.WorkspaceItem:selected">
+      <Setter Property="Background" Value="{DynamicResource PrimaryColor}"/>
+      <Setter Property="Opacity" Value="0.1"/>
+    </Style>
+  </UserControl.Styles>
+  
+  <Border Classes="WorkspaceItem"
+          Background="{Binding ElementName=Root, Path=IsSelected, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=Selected}"
+          PointerPressed="OnPointerPressed"
+          ContextRequested="OnContextRequested">
+    
+    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+      
+      <!-- Icon -->
+      <PathIcon Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                Data="{StaticResource ProjectIcon}"
+                Width="14" Height="14"
+                Foreground="{DynamicResource MutedForeground}"
+                VerticalAlignment="Top"
+                Margin="0,2,8,0"/>
+      
+      <!-- Name -->
+      <TextBlock Grid.Column="1" Grid.Row="0"
+                 Text="{Binding ElementName=Root, Path=Workspace.Name}"
+                 FontSize="13"
+                 FontWeight="Medium"
+                 TextTrimming="CharacterEllipsis"/>
+      
+      <!-- Branch & Stats -->
+      <StackPanel Grid.Column="1" Grid.Row="1"
+                  Orientation="Horizontal"
+                  Spacing="6"
+                  Margin="0,2,0,0">
+        <TextBlock Text="{Binding ElementName=Root, Path=Workspace.BranchName}"
+                   FontSize="11"
+                   Foreground="{DynamicResource MutedForeground}"
+                   TextTrimming="CharacterEllipsis"/>
+      </StackPanel>
+      
+      <!-- Actions -->
+      <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                  Orientation="Horizontal"
+                  Spacing="4"
+                  IsVisible="{Binding ElementName=Root, Path=IsHovered, Converter={StaticResource BoolToBoolConverter}}">
+        <Button Classes="IconButtonSmall"
+                Command="{Binding ElementName=Root, Path=ArchiveCommand}"
+                ToolTip.Tip="Archive">
+          <PathIcon Data="{StaticResource ArchiveIcon}" Width="12" Height="12"/>
+        </Button>
+      </StackPanel>
+      
+    </Grid>
+    
+  </Border>
+  
+</UserControl>

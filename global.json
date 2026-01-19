@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/global.json",
+  "sdk": {
+    "version": "8.0.0",
+    "rollForward": "latestMinor"
+  },
+  "projects": {
+    "src/FlowClaude.Core": "src/FlowClaude.Core",
+    "src/FlowClaude.Infrastructure": "src/FlowClaude.Infrastructure",
+    "src/FlowClaude.Agent": "src/FlowClaude.Agent",
+    "src/FlowClaude.App": "src/FlowClaude.App"
+  }
+}

@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             x:Class="FlowClaude.App.Controls.TerminalTab"
+             x:DataType="vm:TerminalTabViewModel"
+             Height="36">
+  
+  <UserControl.Styles>
+    <Style Selector="Border.Tab">
+      <Setter Property="Padding" Value="12,0"/>
+      <Setter Property="Cursor" Value="Pointer"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+    <Style Selector="Border.Tab">
+      <Setter Property="Background" Value="{Binding IsActive, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=active}"/>
+    </Style>
+  </UserControl.Styles>
+  
+  <Border Classes="Tab"
+          PointerPressed="OnPointerPressed">
+    
+    <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+      
+      <!-- Title -->
+      <TextBlock Grid.Column="0"
+                 Text="{Binding Title}"
+                 FontSize="12"
+                 VerticalAlignment="Center"/>
+      
+      <!-- Directory -->
+      <TextBlock Grid.Column="1"
+                 Text="{Binding CurrentDirectory, StringFormat=' ({0})'}"
+                 FontSize="11"
+                 Foreground="{DynamicResource MutedForeground}"
+                 TextTrimming="CharacterEllipsis"
+                 Margin="8,0,0,0"
+                 VerticalAlignment="Center"/>
+      
+      <!-- Close Button -->
+      <Button Grid.Column="2"
+              Command="{Binding CloseCommand}"
+              CommandParameter="{Binding}"
+              Classes="IconButtonSmall"
+              Margin="8,0,0,0"
+              Width="20"
+              Height="20"
+              Padding="2">
+        <PathIcon Data="{StaticResource CloseIcon}" Width="12" Height="12"/>
+      </Button>
+      
+    </Grid>
+    
+  </Border>
+  
+</UserControl>

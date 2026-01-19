@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+  
+  <!-- ==================== Color System ==================== -->
+  <!-- Dark Theme -->
+  <Color x:Key="DarkBackground">#0F0F0F</Color>
+  <Color x:Key="DarkSurface">#1C1C1E</Color>
+  <Color x:Key="DarkSurfaceHover">#2C2C2E</Color>
+  <Color x:Key="DarkBorder">#38383A</Color>
+  <Color x:Key="DarkTextPrimary">#FFFFFF</Color>
+  <Color x:Key="DarkTextSecondary">#8E8E93</Color>
+  <Color x:Key="DarkPrimary">#0A84FF</Color>
+  <Color x:Key="DarkPrimaryHover">#409CFF</Color>
+  <Color x:Key="DarkSuccess">#30D158</Color>
+  <Color x:Key="DarkError">#FF453A</Color>
+  <Color x:Key="DarkWarning">#FFD60A</Color>
+  
+  <!-- Light Theme -->
+  <Color x:Key="LightBackground">#FFFFFF</Color>
+  <Color x:Key="LightSurface">#F2F2F7</Color>
+  <Color x:Key="LightSurfaceHover">#E5E5EA</Color>
+  <Color x:Key="LightBorder">#C6C6C8</Color>
+  <Color x:Key="LightTextPrimary">#1C1C1E</Color>
+  <Color x:Key="LightTextSecondary">#8E8E93</Color>
+  <Color x:Key="LightPrimary">#007AFF</Color>
+  <Color x:Key="LightPrimaryHover">#0056CC</Color>
+  <Color x:Key="LightSuccess">#34C759</Color>
+  <Color x:Key="LightError">#FF3B30</Color>
+  <Color x:Key="LightWarning">#FFCC00</Color>
+  
+  <!-- ==================== Dynamic Resources ==================== -->
+  <SolidColorBrush x:Key="WindowBackground" Color="{DynamicResource DarkBackground}"/>
+  <SolidColorBrush x:Key="WindowForeground" Color="{DynamicResource DarkTextPrimary}"/>
+  <SolidColorBrush x:Key="SidebarBackground" Color="{DynamicResource DarkSurface}"/>
+  <SolidColorBrush x:Key="HeaderBackground" Color="{DynamicResource DarkSurface}"/>
+  <SolidColorBrush x:Key="InputBackground" Color="{DynamicResource DarkSurfaceHover}"/>
+  <SolidColorBrush x:Key="TerminalBackground" Color="{DynamicResource DarkBackground}"/>
+  <SolidColorBrush x:Key="TerminalTabBackground" Color="{DynamicResource DarkSurface}"/>
+  <SolidColorBrush x:Key="TerminalInputBackground" Color="{DynamicResource DarkSurfaceHover}"/>
+  <SolidColorBrush x:Key="PopupBackground" Color="{DynamicResource DarkSurface}"/>
+  <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource DarkBorder}"/>
+  <SolidColorBrush x:Key="MutedForeground" Color="{DynamicResource DarkTextSecondary}"/>
+  <SolidColorBrush x:Key="PrimaryColor" Color="{DynamicResource DarkPrimary}"/>
+  <SolidColorBrush x:Key="SuccessColor" Color="{DynamicResource DarkSuccess}"/>
+  <SolidColorBrush x:Key="ErrorColor" Color="{DynamicResource DarkError}"/>
+  <SolidColorBrush x:Key="WarningColor" Color="{DynamicResource DarkWarning}"/>
+  <SolidColorBrush x:Key="OverlayBackground" Color="#CC0F0F0F"/>
+  <SolidColorBrush x:Key="PopupShadow" Color="#40000000"/>
+  <SolidColorBrush x:Key="ComboBoxBackground" Color="{DynamicResource DarkSurfaceHover}"/>
+  
+  <!-- ==================== Icon Paths ==================== -->
+  <!-- App Icon -->
+  <PathGeometry x:Key="AppIcon">M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5</PathGeometry>
+  
+  <!-- Sidebar Toggle -->
+  <PathGeometry x:Key="SidebarIcon">M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z</PathGeometry>
+  
+  <!-- Settings -->
+  <PathGeometry x:Key="SettingsIcon">M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z</PathGeometry>
+  
+  <!-- Close -->
+  <PathGeometry x:Key="CloseIcon">M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z</PathGeometry>
+  
+  <!-- Minimize -->
+  <PathGeometry x:Key="MinimizeIcon">M6 12h12v2H6z</PathGeometry>
+  
+  <!-- Maximize -->
+  <PathGeometry x:Key="MaximizeIcon">M7 7h10v10H7z</PathGeometry>
+  
+  <!-- Send -->
+  <PathGeometry x:Key="SendIcon">M2.01 21L23 12 2.01 3 2 10l15 2-15 2z</PathGeometry>
+  
+  <!-- Bot/Assistant -->
+  <PathGeometry x:Key="BotIcon">M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z</PathGeometry>
+  
+  <!-- Project -->
+  <PathGeometry x:Key="ProjectIcon">M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z</PathGeometry>
+  
+  <!-- Empty State -->
+  <PathGeometry x:Key="EmptyIcon">M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10zM12 14c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z</PathGeometry>
+  
+  <!-- Plan Mode -->
+  <PathGeometry x:Key="PlanIcon">M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z</PathGeometry>
+  
+  <!-- Terminal -->
+  <PathGeometry x:Key="TerminalIcon">M7 17h2V7H7v10zm4-10h2V7h-2v10zm4-4h2V7h-2v10z</PathGeometry>
+  
+  <!-- Changes -->
+  <PathGeometry x:Key="ChangesIcon">M6 2C4.9 2 4 2.9 4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H6zm0 2h12v12H6V4z</PathGeometry>
+  
+  <!-- ==================== Effects ==================== -->
+  <BlurEffect x:Key="GlowEffect" Radius="12"/>
+  
+</ResourceDictionary>
