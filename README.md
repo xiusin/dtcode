@@ -66,6 +66,7 @@ Set the following environment variables:
 
 - `ANTHROPIC_API_KEY` - Your Anthropic API key for Claude
 - `FLOWCLAUDE_DATA_DIR` - Custom data directory (default: `~/.flowclaude`)
+- https://github.com/21st-dev/1Code
 
 ## License
 
