@@ -1,9 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using FlowClaude.App.ViewModels;
@@ -23,6 +25,7 @@ public class Program
 {
     public static IServiceCollection Services { get; private set; } = null!;
     private static IServiceProvider _serviceProvider = null!;
+    public static Window? MainWindow { get; set; }
 
     [STAThread]
     public static void Main(string[] args)
@@ -46,13 +49,16 @@ public class Program
     {
         Services = new ServiceCollection();
         
+        // Add logging
+        Services.AddLogging(builder => builder.AddConsole());
+        
         // Database path - use local app data directory
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var dbPath = System.IO.Path.Combine(appDataPath, "FlowClaude", "flowclaude.db");
         System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dbPath)!);
         Services.AddSingleton(dbPath);
         
-        // API Configuration - try to get from environment or config
+        // API Configuration
         var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? "";
         Services.AddSingleton(apiKey);
         
@@ -88,42 +94,32 @@ public class Program
         _serviceProvider = Services.BuildServiceProvider();
     }
 
-    private static void AppMain(Application app, string[] args)
-    {
-        app.Name = "FlowClaude";
-        
-        // Register styles
-        app.Styles.Add(new FluentTheme());
-        
-        // The window will be created by App.OnFrameworkInitializationCompleted()
-    }
-
     public static AppBuilder BuildAvaloniaApp()
     {
         var builder = AppBuilder.Configure<App>()
             .UsePlatformDetect();
             
-        // Try to detect OS and configure accordingly
         if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
             System.Runtime.InteropServices.OSPlatform.OSX))
         {
-            // macOS configuration
             builder.UseAvaloniaNative();
         }
         else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
             System.Runtime.InteropServices.OSPlatform.Linux))
         {
-            // Linux configuration
             builder.UseX11();
         }
         else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
             System.Runtime.InteropServices.OSPlatform.Windows))
         {
-            // Windows configuration
             builder.UseWin32();
         }
         
         return builder
+            .With(new FontManagerOptions
+            {
+                DefaultFamilyName = "Inter",
+            })
             .WithInterFont()
             .LogToTrace();
     }

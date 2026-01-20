@@ -62,17 +62,17 @@ public partial class ChatViewModel : ObservableObject
     
     public void SetWorkspace(Workspace? workspace)
     {
-        _workspace = workspace;
+        Workspace = workspace;
         LoadChatHistoryAsync();
     }
     
     private async void LoadChatHistoryAsync()
     {
-        if (_workspace == null) return;
+        if (Workspace == null) return;
         
         Messages.Clear();
         
-        var chats = await _chatRepository.GetByWorkspaceIdAsync(_workspace.Id);
+        var chats = await _chatRepository.GetByWorkspaceIdAsync(Workspace.Id);
         foreach (var chat in chats.OrderByDescending(c => c.CreatedAt).Take(1))
         {
             _currentChatId = chat.Id;
@@ -99,7 +99,7 @@ public partial class ChatViewModel : ObservableObject
         {
             userMessage = paramMessage;
         }
-        else if (string.IsNullOrWhiteSpace(CurrentMessage) || _workspace == null || IsProcessing)
+        else if (string.IsNullOrWhiteSpace(CurrentMessage) || Workspace == null || IsProcessing)
         {
             return;
         }
@@ -128,7 +128,7 @@ public partial class ChatViewModel : ObservableObject
             {
                 var chat = new Chat
                 {
-                    WorkspaceId = _workspace.Id,
+                    WorkspaceId = Workspace.Id,
                     Title = userMessage.Length > 50 ? userMessage[..50] + "..." : userMessage,
                     Mode = CurrentMode
                 };
@@ -158,7 +158,7 @@ public partial class ChatViewModel : ObservableObject
             await foreach (var evt in _agentService.SendMessageAsync(new AgentRequest
             {
                 Message = userMessage,
-                WorkspaceId = _workspace.Id,
+                WorkspaceId = Workspace.Id,
                 Mode = CurrentMode
             }, _processingCts.Token))
             {

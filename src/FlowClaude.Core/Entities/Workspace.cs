@@ -15,6 +15,9 @@ public class Workspace
     public bool IsPinned { get; set; }
     public bool IsArchived { get; set; }
     
+    // Convenience property for the path
+    public string Path => WorktreePath ?? "";
+    
     public WorkspaceStats? Stats { get; set; }
 }
 

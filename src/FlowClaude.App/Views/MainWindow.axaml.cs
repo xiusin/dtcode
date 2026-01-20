@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using FlowClaude.App.ViewModels;
+using FlowClaude.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FlowClaude.App.Views;
@@ -17,6 +18,9 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
+        // Set main window reference for dialogs
+        Program.MainWindow = this;
+        
         // Get services from DI container
         var provider = Program.Services.BuildServiceProvider();
         _viewModel = provider.GetRequiredService<MainWindowViewModel>();
@@ -115,6 +119,22 @@ public partial class MainWindow : Window
             Application.Current.RequestedThemeVariant = isDark
                 ? Avalonia.Styling.ThemeVariant.Dark
                 : Avalonia.Styling.ThemeVariant.Light;
+        }
+    }
+    
+    private void OnProjectPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is Border border && border.DataContext is Core.Entities.Project project)
+        {
+            _viewModel.SelectProjectCommand.Execute(project);
+        }
+    }
+    
+    private void OnWorkspacePressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is Border border && border.DataContext is Core.Entities.Workspace workspace)
+        {
+            _viewModel.SelectWorkspaceCommand.Execute(workspace);
         }
     }
 }

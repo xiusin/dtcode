@@ -21,28 +21,29 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="0,60">
-          <Border Background="#1A1A1E" 
+          <Border Background="{DynamicResource SurfaceColor}" 
                   CornerRadius="16" 
-                  Padding="32,40"
-                  Effect="{DynamicResource GlowEffect}">
+                  Padding="48,56">
             <StackPanel>
               <PathIcon Data="{StaticResource BotIcon}" 
-                        Width="56" Height="56"
+                        Width="64" Height="64"
                         Foreground="{DynamicResource PrimaryColor}"
                         HorizontalAlignment="Center"/>
               <TextBlock Text="How can I help you today?" 
-                         FontSize="20" 
-                         FontWeight="SemiBold"
+                         FontSize="22" 
+                         FontWeight="600"
                          HorizontalAlignment="Center"
-                         Margin="0,20,0,8"/>
+                         Margin="0,24,0,8"
+                         Foreground="{DynamicResource AppForeground}"/>
               <TextBlock Text="Ask me to help with coding, debugging, or any development task" 
                          Foreground="{DynamicResource MutedForeground}"
                          HorizontalAlignment="Center"
                          TextAlignment="Center"
-                         FontSize="14"/>
+                         FontSize="14"
+                         MaxWidth="300"/>
               
               <!-- Suggested Prompts -->
-              <StackPanel Margin="0,28" Spacing="10" HorizontalAlignment="Center">
+              <StackPanel Margin="0,32,0,0" Spacing="12" HorizontalAlignment="Center">
                 <controls:SuggestionChip Content="Review my code for bugs"
                                          Command="{Binding SendMessageCommand}"
                                          CommandParameter="Review my code for bugs"/>
@@ -107,33 +108,59 @@
       </StackPanel>
     </Border>
     
-    <!-- Input Area -->
+    <!-- Input Area - 1Code风格 -->
     <Border Grid.Row="2"
-            Background="#1A1A1E"
-            BorderBrush="#1AFFFFFF"
+            Background="#0F0F0F"
             BorderThickness="0,1,0,0"
-            CornerRadius="12,12,0,0"
-            Padding="16,16,16,20">
+            BorderBrush="{DynamicResource BorderColor}"
+            Padding="20,16,20,20">
       
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Bottom">
         
         <!-- Text Input -->
-        <TextBox Grid.Column="0"
-                 Text="{Binding CurrentMessage}"
-                 AcceptsReturn="True"
-                 MinHeight="44"
-                 MaxHeight="150"
-                 Watermark="Ask FlowClaude to help with your code..."
-                 Classes="ChatInput"
-                 KeyDown="OnInputKeyDown"/>
+        <Border Grid.Column="0"
+                Background="#1C1C1E"
+                CornerRadius="12"
+                Padding="2,2,2,2">
+          <TextBox Text="{Binding CurrentMessage}"
+                   AcceptsReturn="True"
+                   MinHeight="48"
+                   MaxHeight="150"
+                   Watermark="Ask FlowClaude to help with your code..."
+                   Background="Transparent"
+                   BorderThickness="0"
+                   Padding="14,12"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource AppForeground}"
+                   KeyDown="OnInputKeyDown">
+            <TextBox.Styles>
+              <Style Selector="TextBox">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+              </Style>
+              <Style Selector="TextBox:focus">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+              </Style>
+            </TextBox.Styles>
+          </TextBox>
+        </Border>
         
         <!-- Send Button -->
         <Button Grid.Column="1"
                 Command="{Binding SendMessageCommand}"
                 IsEnabled="{Binding IsProcessing, Converter={StaticResource BoolToBoolConverter}, ConverterParameter=Invert}}"
-                Classes="SendButton"
-                Margin="10,0,0,0">
-          <PathIcon Data="{StaticResource SendIcon}"/>
+                Background="{DynamicResource PrimaryColor}"
+                Foreground="White"
+                CornerRadius="10"
+                Width="44"
+                Height="44"
+                Padding="0"
+                Margin="12,0,0,0">
+          <PathIcon Data="{StaticResource SendIcon}"
+                    Width="20"
+                    Height="20"/>
         </Button>
         
       </Grid>

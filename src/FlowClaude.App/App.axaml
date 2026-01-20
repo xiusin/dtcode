@@ -22,15 +22,7 @@
       <conv:RoleToTextConverter x:Key="RoleToTextConverter"/>
       <conv:StatusToBrushConverter x:Key="StatusToBrushConverter"/>
       
-      <!-- Color System -->
-      <Color x:Key="AppBackground">#0D0D0D</Color>
-      <Color x:Key="SurfaceColor">#141414</Color>
-      <Color x:Key="SurfaceHover">#1A1A1A</Color>
-      <Color x:Key="AppForeground">#ECECEC</Color>
-      <Color x:Key="MutedForeground">#9A9A9A</Color>
-      <Color x:Key="BorderColor">#252525</Color>
-      <Color x:Key="PrimaryColor">#10A37F</Color>
-      <Color x:Key="PrimaryHover">#1A7F64</Color>
+      <!-- Only override specific colors here if needed -->
       <Color x:Key="AccentColor">#2A2A2A</Color>
     </ResourceDictionary>
   </Application.Resources>
@@ -40,25 +32,26 @@
     
     <!-- ==================== Modern Clean Design System ==================== -->
     
-    <!-- Top Bar Button -->
-    <Style Selector="Button.TopBarButton">
+    <!-- Window Control Button (macOS style) -->
+    <Style Selector="Button.WindowControlButton">
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="Foreground" Value="{DynamicResource AppForeground}"/>
       <Setter Property="BorderThickness" Value="0"/>
-      <Setter Property="Padding" Value="14,8"/>
-      <Setter Property="FontSize" Value="10"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="FontSize" Value="12"/>
       <Setter Property="Width" Value="46"/>
       <Setter Property="Height" Value="28"/>
+      <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
     </Style>
-    <Style Selector="Button.TopBarButton:pointerover">
+    <Style Selector="Button.WindowControlButton:pointerover">
       <Setter Property="Background" Value="#252525"/>
     </Style>
-    <Style Selector="Button.TopBarButton.Close:pointerover">
+    <Style Selector="Button.WindowControlButton.Close:pointerover">
       <Setter Property="Background" Value="#E81123"/>
       <Setter Property="Foreground" Value="White"/>
     </Style>
     
-    <!-- Sidebar Button -->
+    <!-- Top Bar Button (deprecated, use WindowControlButton) -->
     <Style Selector="Button.SidebarButton">
       <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
       <Setter Property="Foreground" Value="{DynamicResource AppForeground}"/>
@@ -75,6 +68,16 @@
       <Setter Property="Background" Value="Transparent"/>
     </Style>
     <Style Selector="Button.SidebarButton.Bottom:pointerover">
+      <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+    </Style>
+    
+    <!-- Sidebar Item -->
+    <Style Selector="Border.SidebarItem">
+      <Setter Property="Padding" Value="12,10"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Border.SidebarItem:pointerover">
       <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
     </Style>
     
@@ -156,6 +159,30 @@
     </Style>
     <Style Selector="ScrollViewer /template/ ScrollBar:pointerover /template/ Thumb">
       <Setter Property="Background" Value="#505050"/>
+    </Style>
+    
+    <!-- Chip Style for SuggestionChip -->
+    <Style Selector="Border.Chip">
+      <Setter Property="Padding" Value="14,10,14,10"/>
+      <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Border.Chip:pointerover">
+      <Setter Property="Background" Value="#333333"/>
+    </Style>
+    
+    <!-- Message Content Style -->
+    <Style Selector="TextBox.messageContent">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBox.messageContent.IsError">
+      <Setter Property="Foreground" Value="{DynamicResource ErrorColor}"/>
     </Style>
     
   </Application.Styles>

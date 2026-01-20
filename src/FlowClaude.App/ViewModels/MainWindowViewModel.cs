@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
 using System.Windows.Input;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowClaude.Core.Entities;
@@ -43,23 +43,12 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _isLoading = false;
     
     [ObservableProperty]
-    private string _inputText = "";
-    
-    [ObservableProperty]
     private bool _showRightPanel = false;
     
     public ObservableCollection<Project> Projects { get; } = new();
     public ObservableCollection<Workspace> PinnedWorkspaces { get; } = new();
     public ObservableCollection<Workspace> RecentWorkspaces { get; } = new();
     public ObservableCollection<Workspace> ArchivedWorkspaces { get; } = new();
-    public ObservableCollection<string> Suggestions { get; } = new()
-    {
-        "Help me understand this codebase",
-        "Create a new feature",
-        "Fix a bug",
-        "Review my code",
-        "Explain this function"
-    };
     
     public ChatViewModel ChatViewModel { get; }
     public TerminalViewModel TerminalViewModel { get; }
@@ -80,7 +69,7 @@ public partial class MainWindowViewModel : ObservableObject
     public ICommand ArchiveWorkspaceCommand { get; }
     public ICommand DeleteWorkspaceCommand { get; }
     public ICommand NavigateToViewCommand { get; }
-    public ICommand SendCommand { get; }
+    public ICommand AddProjectCommand { get; }
     
     public MainWindowViewModel(
         IProjectRepository projectRepository,
@@ -109,7 +98,7 @@ public partial class MainWindowViewModel : ObservableObject
         ArchiveWorkspaceCommand = new RelayCommand<Workspace>(ArchiveWorkspace);
         DeleteWorkspaceCommand = new RelayCommand<Workspace>(DeleteWorkspace);
         NavigateToViewCommand = new RelayCommand<ViewMode>(vm => CurrentViewMode = vm);
-        SendCommand = new RelayCommand(SendMessage);
+        AddProjectCommand = new AsyncRelayCommand(AddProjectAsync);
         
         LoadProjectsAsync();
     }
@@ -176,6 +165,10 @@ public partial class MainWindowViewModel : ObservableObject
         if (workspace != null)
         {
             CurrentViewMode = ViewMode.Chat;
+            // Update the ChatViewModel with the selected workspace
+            ChatViewModel.SetWorkspace(workspace);
+            ChangesViewModel.SetWorkspace(workspace);
+            TerminalViewModel.SetWorkspace(workspace);
         }
     }
     
@@ -255,13 +248,72 @@ public partial class MainWindowViewModel : ObservableObject
         return $"{adjectives[random.Next(adjectives.Length)]}-{animals[random.Next(animals.Length)]}-{random.Next(1000, 9999)}";
     }
     
-    private void SendMessage()
+    private async Task AddProjectAsync()
     {
-        if (!string.IsNullOrWhiteSpace(InputText))
+        var dialog = new OpenFolderDialog
         {
-            // Send message logic
-            InputText = string.Empty;
+            Title = "Select Git Repository",
+        };
+        
+        var window = Program.MainWindow;
+        if (window == null) return;
+        
+        var path = await dialog.ShowAsync(window);
+        
+        if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
+        {
+            var gitPath = Path.Combine(path, ".git");
+            if (Directory.Exists(gitPath))
+            {
+                var projectName = new DirectoryInfo(path).Name;
+                
+                var project = new Project
+                {
+                    Name = projectName,
+                    Path = path,
+                    GitOwner = ExtractOwnerFromRemote(GetRemoteUrl(path)),
+                    GitRepo = projectName
+                };
+                
+                project = await _projectRepository.CreateAsync(project);
+                Projects.Add(project);
+                SelectProject(project);
+            }
         }
+    }
+    
+    private static string? GetRemoteUrl(string repoPath)
+    {
+        try
+        {
+            var configPath = Path.Combine(repoPath, ".git", "config");
+            if (File.Exists(configPath))
+            {
+                var config = File.ReadAllText(configPath);
+                var remoteMatch = System.Text.RegularExpressions.Regex.Match(config, @"url = (.+)");
+                if (remoteMatch.Success)
+                {
+                    return remoteMatch.Groups[1].Value.Trim();
+                }
+            }
+        }
+        catch
+        {
+            // Ignore errors
+        }
+        return null;
+    }
+    
+    private static string? ExtractOwnerFromRemote(string? remoteUrl)
+    {
+        if (string.IsNullOrEmpty(remoteUrl)) return null;
+        
+        // Handle URLs like: https://github.com/owner/repo.git or git@github.com:owner/repo.git
+        var match = System.Text.RegularExpressions.Regex.Match(
+            remoteUrl, 
+            @"(?:github\.com|gitlab\.com|bitbucket\.org)[:/]([^/]+)/");
+        
+        return match.Success ? match.Groups[1].Value : null;
     }
 }
 

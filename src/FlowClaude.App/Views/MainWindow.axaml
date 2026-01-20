@@ -1,4 +1,19 @@
-<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="using:FlowClaude.App.ViewModels" x:Class="FlowClaude.App.Views.MainWindow" Title="FlowClaude" Width="1100" Height="700" MinWidth="900" MinHeight="600" Background="{DynamicResource AppBackground}" Foreground="{DynamicResource AppForeground}" SystemDecorations="None" x:DataType="vm:MainWindowViewModel">
+<Window xmlns="https://github.com/avaloniaui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlowClaude.App.ViewModels"
+             xmlns:views="using:FlowClaude.App.Views"
+             x:Class="FlowClaude.App.Views.MainWindow" 
+             Title="FlowClaude" 
+             Width="1100" 
+             Height="700" 
+             MinWidth="900" 
+             MinHeight="600" 
+             Background="{DynamicResource AppBackground}" 
+             Foreground="{DynamicResource AppForeground}" 
+             SystemDecorations="None"
+             UseLayoutRounding="True"
+             RenderOptions.BitmapInterpolationMode="HighQuality"
+             x:DataType="vm:MainWindowViewModel">
 
   <Window.Styles>
     <Style Selector="Window">
@@ -7,43 +22,123 @@
   </Window.Styles>
 
   <Grid>
-    <Border Height="40" Background="{DynamicResource SurfaceColor}">
-      <Grid ColumnDefinitions="*,Auto,Auto,Auto">
-        <Panel Grid.Column="0" Background="Transparent"/>
-        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+    <!-- 顶部栏：标题 + 窗口控制按钮 -->
+    <Border Height="40" Background="{DynamicResource SurfaceColor}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderColor}">
+      <Grid ColumnDefinitions="*,Auto">
+        <!-- 拖拽区域 + 标题 -->
+        <Panel Grid.Column="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16,0,0,0">
           <TextBlock Text="FlowClaude" FontSize="13" FontWeight="500" Foreground="{DynamicResource MutedForeground}"/>
-        </StackPanel>
-        <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-          <Button x:Name="MinimizeButton" Classes="TopBarButton" Content="&#x2014;"/>
-          <Button x:Name="MaximizeButton" Classes="TopBarButton" Content="&#x25A1;"/>
-          <Button x:Name="CloseButton" Classes="TopBarButton Close" Content="&#x2715;"/>
+        </Panel>
+        
+        <!-- 窗口控制按钮 -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="0">
+          <!-- 最小化 -->
+          <Button x:Name="MinimizeButton" Classes="WindowControlButton">
+            <PathIcon Data="{StaticResource MinimizeIcon}" Width="12" Height="12"/>
+          </Button>
+          <!-- 最大化 -->
+          <Button x:Name="MaximizeButton" Classes="WindowControlButton">
+            <PathIcon Data="{StaticResource MaximizeIcon}" Width="12" Height="12"/>
+          </Button>
+          <!-- 关闭 -->
+          <Button x:Name="CloseButton" Classes="WindowControlButton Close">
+            <PathIcon Data="{StaticResource CloseIcon}" Width="14" Height="14"/>
+          </Button>
         </StackPanel>
       </Grid>
     </Border>
 
+    <!-- 主内容区域 -->
     <Grid Margin="0,40,0,0" ColumnDefinitions="260,*,Auto">
       <Border Grid.Column="0" Background="{DynamicResource SurfaceColor}" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource BorderColor}">
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
           </Grid.RowDefinitions>
-          <Button Grid.Row="0" Classes="SidebarButton" Margin="12,12,12,8">
+          
+          <!-- New Chat Button -->
+          <Button Grid.Row="0" Classes="SidebarButton" Margin="12,12,12,8"
+                  Command="{Binding CreateWorkspaceCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="+" FontSize="14"/>
+              <PathIcon Data="{StaticResource AddIcon}" Width="16" Height="16"/>
               <TextBlock Text="New Chat" FontSize="13"/>
             </StackPanel>
           </Button>
-          <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-              <TextBlock Text="Recent Chats" FontSize="11" Foreground="{DynamicResource MutedForeground}" Margin="16,8"/>
-              <TextBlock Text="No recent chats" FontSize="12" Foreground="{DynamicResource MutedForeground}" Margin="16,0" TextAlignment="Center"/>
+          
+          <!-- Local Repositories Section -->
+          <StackPanel Grid.Row="1" Margin="0,8,0,8">
+            <TextBlock Text="Local Repositories" FontSize="11" FontWeight="500" 
+                       Foreground="{DynamicResource MutedForeground}" Margin="16,0,16,8"/>
+            
+            <!-- Projects List -->
+            <ItemsControl ItemsSource="{Binding Projects}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Classes="SidebarItem" PointerPressed="OnProjectPressed">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <PathIcon Data="{StaticResource ProjectIcon}" Width="14" Height="14"
+                                Foreground="{DynamicResource PrimaryColor}"/>
+                      <TextBlock Text="{Binding Name}" FontSize="12" 
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource AppForeground}"/>
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <!-- Empty State -->
+            <StackPanel IsVisible="{Binding Projects.Count, Converter={StaticResource NumberToBoolConverter}, ConverterParameter=Invert}"
+                        Margin="16,8">
+              <TextBlock Text="No repositories" FontSize="12" 
+                        Foreground="{DynamicResource MutedForeground}"
+                        TextAlignment="Center"/>
+              <Button Content="Add Repository" 
+                      Classes="SidebarButton"
+                      Margin="0,8,0,0"
+                      Command="{Binding AddProjectCommand}"/>
             </StackPanel>
-          </ScrollViewer>
-          <Button Grid.Row="2" Classes="SidebarButton Bottom" Margin="12,8,12,12">
+          </StackPanel>
+          
+          <!-- Recent Chats -->
+          <StackPanel Grid.Row="2">
+            <TextBlock Text="Recent" FontSize="11" FontWeight="500" 
+                       Foreground="{DynamicResource MutedForeground}" Margin="16,8,16,8"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding RecentWorkspaces}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border Classes="SidebarItem" 
+                            PointerPressed="OnWorkspacePressed"
+                            Background="{Binding IsPinned, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=Selected}">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                          <PathIcon Data="{StaticResource ChatIcon}" Width="14" Height="14"
+                                    Foreground="{DynamicResource MutedForeground}"/>
+                          <TextBlock Text="{Binding Name}" FontSize="12" 
+                                    VerticalAlignment="Center"
+                                    TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <PathIcon Grid.Column="1" Data="{StaticResource PinIcon}" 
+                                  Width="12" Height="12"
+                                  IsVisible="{Binding IsPinned}"
+                                  Foreground="{DynamicResource MutedForeground}"/>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </StackPanel>
+          
+          <!-- Settings Button -->
+          <Button Grid.Row="3" Classes="SidebarButton Bottom" Margin="12,8,12,12"
+                  Command="{Binding OpenSettingsCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="&#x2699;" FontSize="14"/>
+              <PathIcon Data="{StaticResource SettingsIcon}" Width="16" Height="16"/>
               <TextBlock Text="Settings" FontSize="13"/>
             </StackPanel>
           </Button>
@@ -51,38 +146,8 @@
       </Border>
 
       <Grid Grid.Column="1">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-          </Grid.RowDefinitions>
-          <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <StackPanel Spacing="0">
-              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24" Margin="0,80,0,0">
-                <TextBlock Text="&#x1F44B;" FontSize="48"/>
-                <TextBlock Text="How can I help you today?" FontSize="20" FontWeight="400" Foreground="{DynamicResource MutedForeground}"/>
-                <ItemsControl ItemsSource="{Binding Suggestions}" HorizontalAlignment="Center">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <Border Classes="SuggestionChip">
-                        <TextBlock Text="{Binding}" FontSize="13"/>
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
-              <StackPanel Spacing="16" Margin="16,16,16,80"/>
-            </StackPanel>
-          </ScrollViewer>
-          <Border Grid.Row="1" Background="{DynamicResource SurfaceColor}" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderColor}" Padding="16,16,16,24">
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBox Grid.Column="0" Classes="ChatInput" Text="{Binding InputText}" AcceptsReturn="True" MinHeight="44" MaxHeight="120"/>
-              <Button Grid.Column="1" Classes="SendButton" Margin="8,0,0,0" Command="{Binding SendCommand}">
-                <TextBlock Text="&#x2191;" FontSize="16" FontWeight="600"/>
-              </Button>
-            </Grid>
-          </Border>
-        </Grid>
+        <!-- 使用完整的ChatView，它包含了消息列表、欢迎界面和输入框 -->
+        <views:ChatView DataContext="{Binding ChatViewModel}"/>
       </Grid>
 
       <Border Grid.Column="2" Width="280" Background="{DynamicResource SurfaceColor}" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderColor}" IsVisible="{Binding ShowRightPanel}">

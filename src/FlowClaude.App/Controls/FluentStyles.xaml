@@ -30,6 +30,9 @@
   <Color x:Key="LightWarning">#FFCC00</Color>
   
   <!-- ==================== Dynamic Resources ==================== -->
+  <SolidColorBrush x:Key="AppBackground" Color="{DynamicResource DarkBackground}"/>
+  <SolidColorBrush x:Key="AppForeground" Color="{DynamicResource DarkTextPrimary}"/>
+  <SolidColorBrush x:Key="SurfaceColor" Color="{DynamicResource DarkSurface}"/>
   <SolidColorBrush x:Key="WindowBackground" Color="{DynamicResource DarkBackground}"/>
   <SolidColorBrush x:Key="WindowForeground" Color="{DynamicResource DarkTextPrimary}"/>
   <SolidColorBrush x:Key="SidebarBackground" Color="{DynamicResource DarkSurface}"/>
@@ -89,7 +92,16 @@
   <!-- Changes -->
   <PathGeometry x:Key="ChangesIcon">M6 2C4.9 2 4 2.9 4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H6zm0 2h12v12H6V4z</PathGeometry>
   
+  <!-- Add -->
+  <PathGeometry x:Key="AddIcon">M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z</PathGeometry>
+  
+  <!-- Chat -->
+  <PathGeometry x:Key="ChatIcon">M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z</PathGeometry>
+  
+  <!-- Pin -->
+  <PathGeometry x:Key="PinIcon">M16 9V4l1 1c.74.74 1.24 1.79 1.28 2.92L16 9zm4.91 3.04c.34-.86.55-1.8.58-2.79L20 9V4h-3l1.91 8.04zM6.35 6.35L4.7 5.04c-.84-.84-2.13-.65-2.72-.04L2 5v14c0 1.1.9 2 2 2h14l-2.3-2.3c-.59-.59-.8-1.5-.65-2.32l.04-.2-.91-.91c-.36-.36-.54-.88-.48-1.41l.07-.21.21-.09c.42-.16.86-.19 1.28-.07l.21.07-.47 1.17C13.75 16.16 12.6 17 11.33 17H6c-.55 0-1-.45-1-1V6.41l.62-.62.73-.44z</PathGeometry>
+  
   <!-- ==================== Effects ==================== -->
-  <BlurEffect x:Key="GlowEffect" Radius="12"/>
+  <!-- Note: BlurEffect removed as it causes rendering issues on macOS -->
   
 </ResourceDictionary>
