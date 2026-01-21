@@ -1,16 +1,19 @@
-<Window xmlns="https://github.com/avaloniaui" 
+<Window xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FlowClaude.App.ViewModels"
              xmlns:views="using:FlowClaude.App.Views"
-             x:Class="FlowClaude.App.Views.MainWindow" 
-             Title="FlowClaude" 
-             Width="1100" 
-             Height="700" 
-             MinWidth="900" 
-             MinHeight="600" 
-             Background="{DynamicResource AppBackground}" 
-             Foreground="{DynamicResource AppForeground}" 
+             x:Class="FlowClaude.App.Views.MainWindow"
+             Title="FlowClaude"
+             Width="800"
+             Height="600"
+             MinWidth="800"
+             MinHeight="600"
+             Background="{DynamicResource AppBackground}"
+             Foreground="{DynamicResource AppForeground}"
              SystemDecorations="None"
+             ExtendClientAreaToDecorationsHint="True"
+             ExtendClientAreaChromeHints="NoChrome"
+             ExtendClientAreaTitleBarHeightHint="-1"
              UseLayoutRounding="True"
              RenderOptions.BitmapInterpolationMode="HighQuality"
              x:DataType="vm:MainWindowViewModel">
@@ -21,32 +24,49 @@
     </Style>
   </Window.Styles>
 
+  <Window.Resources>
+    <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,0">
+      <GradientStop Offset="0" Color="#1C1C1E"/>
+      <GradientStop Offset="1" Color="#1C1C1E"/>
+    </LinearGradientBrush>
+  </Window.Resources>
+
   <Grid>
-    <!-- 顶部栏：标题 + 窗口控制按钮 -->
-    <Border Height="40" Background="{DynamicResource SurfaceColor}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderColor}">
+    <!-- 顶部栏：标题 + 窗口控制按钮 (作为窗口装饰区域) -->
+    <Border Height="32" Background="{DynamicResource SurfaceColor}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderColor}" IsHitTestVisible="False">
       <Grid ColumnDefinitions="*,Auto">
-        <!-- 拖拽区域 + 标题 -->
-        <Panel Grid.Column="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16,0,0,0">
-          <TextBlock Text="FlowClaude" FontSize="13" FontWeight="500" Foreground="{DynamicResource MutedForeground}"/>
-        </Panel>
+        <!-- 标题占位 -->
+        <Panel Grid.Column="0"/>
         
         <!-- 窗口控制按钮 -->
         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="0">
           <!-- 最小化 -->
-          <Button x:Name="MinimizeButton" Classes="WindowControlButton">
+          <Button x:Name="MinimizeButton" Classes="WindowControlButton"
+                  ToolTip.Tip="Minimize">
             <PathIcon Data="{StaticResource MinimizeIcon}" Width="12" Height="12"/>
           </Button>
           <!-- 最大化 -->
-          <Button x:Name="MaximizeButton" Classes="WindowControlButton">
-            <PathIcon Data="{StaticResource MaximizeIcon}" Width="12" Height="12"/>
+          <Button x:Name="MaximizeButton" Classes="WindowControlButton"
+                  ToolTip.Tip="Maximize">
+            <PathIcon Data="{StaticResource MaximizeIcon}" Width="10" Height="10"/>
           </Button>
           <!-- 关闭 -->
-          <Button x:Name="CloseButton" Classes="WindowControlButton Close">
-            <PathIcon Data="{StaticResource CloseIcon}" Width="14" Height="14"/>
+          <Button x:Name="CloseButton" Classes="WindowControlButton Close"
+                  ToolTip.Tip="Close">
+            <PathIcon Data="{StaticResource CloseIcon}" Width="12" Height="12"/>
           </Button>
         </StackPanel>
       </Grid>
     </Border>
+
+    <!-- 实际的可拖拽区域（透明，覆盖整个窗口） -->
+    <Panel Height="32" VerticalAlignment="Top" Background="Transparent" DoubleTapped="OnTitleBarDoubleTap">
+      <Panel.Styles>
+        <Style Selector="Panel:pointerover">
+          <Setter Property="Background" Value="#1A1A1A"/>
+        </Style>
+      </Panel.Styles>
+    </Panel>
 
     <!-- 主内容区域 -->
     <Grid Margin="0,40,0,0" ColumnDefinitions="260,*,Auto">

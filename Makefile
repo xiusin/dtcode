@@ -46,23 +46,6 @@ BLUE   := \033[34m
 CYAN   := \033[36m
 RESET  := \033[0m
 
-# --- Helper Functions ---
-define print_status
-	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) $(1)"
-endef
-
-define print_success
-	@echo "$(GREEN)[✓]$(RESET) $(1)"
-endef
-
-define print_warning
-	@echo "$(YELLOW)[⚠]$(RESET) $(1)"
-endef
-
-define print_error
-	@echo "$(RED)[✗]$(RESET) $(1)"
-endef
-
 # ============================================
 # Phony Targets
 # ============================================
@@ -124,52 +107,56 @@ version:
 # Dependency Check
 # ============================================
 deps-check:
-	@$(call print_status,Checking dependencies...)
-	@which dotnet > /dev/null 2>&1 && $(call print_success,.NET SDK found) || $(call print_error,.NET SDK not found - please install .NET 8.0+)
-	@which git > /dev/null 2>&1 && $(call print_success,Git found) || $(call print_error,Git not found)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Checking dependencies..."
+	@which dotnet > /dev/null 2>&1 && \
+		echo "$(GREEN)[✓]$(RESET) .NET SDK found" || \
+		echo "$(RED)[✗]$(RESET) .NET SDK not found - please install .NET 8.0+"
+	@which git > /dev/null 2>&1 && \
+		echo "$(GREEN)[✓]$(RESET) Git found" || \
+		echo "$(RED)[✗]$(RESET) Git not found"
 
 # ============================================
 # Restore
 # ============================================
 restore:
-	@$(call print_status,Restoring NuGet dependencies...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Restoring NuGet dependencies..."
 	@dotnet restore $(SOLUTION_FILE)
-	@$(call print_success,Dependencies restored)
+	@echo "$(GREEN)[✓]$(RESET) Dependencies restored"
 
 # ============================================
 # Build
 # ============================================
 build: deps-check restore
-	@$(call print_status,Building solution ($(CONFIG))...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Building solution ($(CONFIG))..."
 	@dotnet build $(SOLUTION_FILE) $(DOTNET_ARGS)
-	@$(call print_success,Build completed successfully)
+	@echo "$(GREEN)[✓]$(RESET) Build completed successfully"
 
 build-dev:
-	@$(call print_status,Building solution (Debug)...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Building solution (Debug)..."
 	@dotnet build $(SOLUTION_FILE) --configuration Debug
-	@$(call print_success,Build completed successfully)
+	@echo "$(GREEN)[✓]$(RESET) Build completed successfully"
 
 build-all:
-	@$(call print_status,Building all projects...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Building all projects..."
 	@dotnet build $(SOLUTION_FILE) --configuration $(CONFIG) --no-incremental
-	@$(call print_success,All projects built successfully)
+	@echo "$(GREEN)[✓]$(RESET) All projects built successfully"
 
 # ============================================
 # Run
 # ============================================
 run: build
-	@$(call print_status,Running application...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Running application..."
 	@dotnet run --project src/FlowClaude.App $(DOTNET_ARGS)
 
 run-dev: build-dev
-	@$(call print_status,Running application (Debug mode)...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Running application (Debug mode)..."
 	@dotnet run --project src/FlowClaude.App --configuration Debug
 
 # ============================================
 # Publish
 # ============================================
 publish: deps-check restore build
-	@$(call print_status,Publishing for $(PLATFORM_NAME)...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Publishing for $(PLATFORM_NAME)..."
 	@mkdir -p $(OUTPUT_DIR)
 	@dotnet publish src/FlowClaude.App \
 		$(DOTNET_ARGS) \
@@ -177,47 +164,47 @@ publish: deps-check restore build
 		--self-contained false \
 		-p:PublishSingleFile=false \
 		-o $(OUTPUT_DIR)
-	@$(call print_success,Published to $(OUTPUT_DIR))
+	@echo "$(GREEN)[✓]$(RESET) Published to $(OUTPUT_DIR)"
 	@ls -la $(OUTPUT_DIR)
 
 publish-osx: deps-check restore build
-	@$(call print_status,Publishing for macOS...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Publishing for macOS..."
 	@mkdir -p publish/osx-x64
 	@dotnet publish src/FlowClaude.App \
 		$(DOTNET_ARGS) \
 		-r osx-x64 \
 		--self-contained false \
 		-o publish/osx-x64
-	@$(call print_success,Published to publish/osx-x64)
+	@echo "$(GREEN)[✓]$(RESET) Published to publish/osx-x64"
 
 publish-linux: deps-check restore build
-	@$(call print_status,Publishing for Linux...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Publishing for Linux..."
 	@mkdir -p publish/linux-x64
 	@dotnet publish src/FlowClaude.App \
 		$(DOTNET_ARGS) \
 		-r linux-x64 \
 		--self-contained false \
 		-o publish/linux-x64
-	@$(call print_success,Published to publish/linux-x64)
+	@echo "$(GREEN)[✓]$(RESET) Published to publish/linux-x64"
 
 publish-windows: deps-check restore build
-	@$(call print_status,Publishing for Windows...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Publishing for Windows..."
 	@mkdir -p publish/win-x64
 	@dotnet publish src/FlowClaude.App \
 		$(DOTNET_ARGS) \
 		-r win-x64 \
 		--self-contained false \
 		-o publish/win-x64
-	@$(call print_success,Published to publish/win-x64)
+	@echo "$(GREEN)[✓]$(RESET) Published to publish/win-x64"
 
 publish-all: publish-osx publish-linux publish-windows
-	@$(call print_success,All platform builds completed)
+	@echo "$(GREEN)[✓]$(RESET) All platform builds completed"
 
 # ============================================
 # Self-Contained Publishing
 # ============================================
 publish-sc: deps-check restore build
-	@$(call print_status,Publishing self-contained for $(PLATFORM_NAME)...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Publishing self-contained for $(PLATFORM_NAME)..."
 	@mkdir -p $(OUTPUT_DIR)-sc
 	@dotnet publish src/FlowClaude.App \
 		$(DOTNET_ARGS) \
@@ -225,42 +212,42 @@ publish-sc: deps-check restore build
 		--self-contained true \
 		-p:PublishSingleFile=true \
 		-o $(OUTPUT_DIR)-sc
-	@$(call print_success,Self-contained published to $(OUTPUT_DIR)-sc)
+	@echo "$(GREEN)[✓]$(RESET) Self-contained published to $(OUTPUT_DIR)-sc"
 
 # ============================================
 # Test
 # ============================================
 test:
-	@$(call print_status,Running unit tests...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Running unit tests..."
 	@dotnet test $(SOLUTION_FILE) --configuration $(CONFIG) --no-build --verbosity normal
-	@$(call print_success,Tests completed)
+	@echo "$(GREEN)[✓]$(RESET) Tests completed"
 
 test-coverage:
-	@$(call print_status,Running tests with coverage...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Running tests with coverage..."
 	@dotnet test $(SOLUTION_FILE) \
 		--configuration $(CONFIG) \
 		--no-build \
 		--collect:"XPlat Code Coverage" \
 		-- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
-	@$(call print_success,Coverage report generated")
+	@echo "$(GREEN)[✓]$(RESET) Coverage report generated"
 
 # ============================================
 # Clean
 # ============================================
 clean:
-	@$(call print_status,Cleaning build artifacts...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Cleaning build artifacts..."
 	@dotnet clean $(SOLUTION_FILE) -v quiet 2>/dev/null || true
 	@find . -type d -name bin -exec rm -rf {} + 2>/dev/null || true
 	@find . -type d -name obj -exec rm -rf {} + 2>/dev/null || true
 	@rm -rf $(ARTIFACTS_DIR) 2>/dev/null || true
 	@rm -rf publish/* 2>/dev/null || true
-	@$(call print_success,Clean completed")
+	@echo "$(GREEN)[✓]$(RESET) Clean completed"
 
 # ============================================
 # Install (Homebrew for macOS)
 # ============================================
 install-homebrew:
-	@$(call print_status,Creating Homebrew formula...)
+	@echo "$(CYAN)[$(PROJECT_NAME)]$(RESET) Creating Homebrew formula..."
 	@cat > Formula/flowclaude.rb <<-EOF
 	class Flowclaude < Formula
 	  desc "A modern, cross-platform desktop UI for Claude Code"
@@ -276,4 +263,4 @@ install-homebrew:
 	  end
 	end
 	EOF
-	@$(call print_success,Homebrew formula created at Formula/flowclaude.rb")
+	@echo "$(GREEN)[✓]$(RESET) Homebrew formula created at Formula/flowclaude.rb"

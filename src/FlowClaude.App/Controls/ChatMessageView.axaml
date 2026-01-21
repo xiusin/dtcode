@@ -38,7 +38,7 @@
                Padding="0"
                FontSize="14"
                TextWrapping="Wrap"
-               Classes.messageContent="{Binding IsError}"/>
+               Foreground="{Binding IsError, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=Error}"/>
       
       <!-- Streaming indicator -->
       <StackPanel IsVisible="{Binding IsStreaming}"
